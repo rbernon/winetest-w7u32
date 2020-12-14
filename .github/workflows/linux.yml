@@ -5,7 +5,7 @@ env:
   repository: rbernon/wine
   builds: '["32", "64"]'
   configs: '["with-mingw", "without-mingw", "with-llvm-mingw"]'
-  refs: '["wine-6.0-rc1"]'
+  refs: '["wine-6.0-rc2", "wine-staging-6.0-rc2", "wine-staging-6.0-rc1", "wine-5.22", "wine-staging-5.22", "wine-5.21", "wine-staging-5.21", "wine-5.20", "wine-staging-5.20", "wine-5.19", "wine-staging-5.19", "wine-5.18", "wine-staging-5.18"]'
 
 jobs:
   matrix:

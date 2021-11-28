@@ -21,103 +21,114 @@ jobs:
         echo '::set-output name=configs::${{ env.configs }}'
         echo '::set-output name=refs::${{ env.refs }}'
 
-  build:
+  # build:
+  #   runs-on: ubuntu-latest
+  #   needs: matrix
+  #   strategy:
+  #     matrix:
+  #       build: ${{ fromJson(needs.matrix.outputs.builds) }}
+  #       config: ${{ fromJson(needs.matrix.outputs.configs) }}
+  #       ref: ${{ fromJson(needs.matrix.outputs.refs) }}
+
+  #   env:
+  #     ARCH_32: i686
+  #     ARCH_64: x86_64
+  #     CONFIGURE_OPTS: --silent --disable-tests CROSSDEBUG=split
+  #     CONFIGURE_OPTS_llvm: --with-mingw CROSSCFLAGS="-Wno-pragma-pack -Wno-unknown-warning-option" DELAYLOADFLAG=-Wl,-delayload,
+  #     CONFIGURE_OPTS_32:
+  #     CONFIGURE_OPTS_64: --enable-win64
+
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2.3.2
+  #       with:
+  #         repository: ${{ env.repository }}
+  #         ref: ${{ matrix.ref }}
+
+  #     - name: Cache
+  #       uses: actions/cache@v1.1.0
+  #       with:
+  #         path: .ccache
+  #         key:
+  #           ccache-linux-${{ matrix.build }}-${{ matrix.config }}-${{ matrix.ref }}-${ { github.sha }}
+  #         restore-keys: |
+  #           ccache-linux-${{ matrix.build }}-${{ matrix.config }}-${{ matrix.ref }}-
+  #           ccache-linux-${{ matrix.build }}-${{ matrix.config }}-
+  #           ccache-linux-${{ matrix.build }}-
+
+  #     - name: Toolchain
+  #       run: |
+  #         docker pull rbernon/wine-llvm-$ARCH_${{ matrix.build }}:latest
+  #         docker tag rbernon/wine-llvm-$ARCH_${{ matrix.build }}:latest build-image:latest
+  #       if: ${{ endsWith(matrix.config, 'llvm-mingw') }}
+
+  #     - name: Toolchain
+  #       run: |
+  #         docker pull rbernon/wine-$ARCH_${{ matrix.build }}:latest
+  #         docker tag rbernon/wine-$ARCH_${{ matrix.build }}:latest build-image:latest
+  #       if: ${{ !endsWith(matrix.config, 'llvm-mingw') }}
+
+  #     - name: Prepare
+  #       run: |
+  #         autoreconf -fi
+  #         ./tools/make_requests
+
+  #     - name: Configure
+  #       run: |
+  #         export CCACHE_DIR=$PWD/.ccache
+  #         export PATH=/usr/lib/ccache:$PATH
+  #         export CONFIGURE_OPTS="$CONFIGURE_OPTS --${{ matrix.config }}"
+  #         export CONFIGURE_OPTS="${CONFIGURE_OPTS/--with-llvm-mingw/$CONFIGURE_OPTS_llvm}"
+  #         docker run --rm -e USER -e HOME -e PATH -e CCACHE_DIR -e USERID=$(id -u) -u $(id -u):$(id -g) -w $PWD -v $HOME:$HOME build-image:latest \
+  #         bash -c "mkdir build && cd build && ../configure $CONFIGURE_OPTS $CONFIGURE_OPTS_${{ matrix.build }}"
+
+  #     - name: Build
+  #       run: |
+  #         export CCACHE_DIR=$PWD/.ccache
+  #         export PATH=/usr/lib/ccache:$PATH
+  #         docker run --rm -e USER -e HOME -e PATH -e CCACHE_DIR -e USERID=$(id -u) -u $(id -u):$(id -g) -w $PWD -v $HOME:$HOME build-image:latest \
+  #         make -C build --silent -j4
+
+  #     - name: Archive
+  #       run: |
+  #         mv build wine${{ matrix.build }}
+  #         tar chJf ${{ matrix.ref }}-${{ matrix.build }}-${{ matrix.config }}.tar.xz \
+  #           --exclude=*.o --exclude=*.a --exclude=*.debug --exclude=*.pdb \
+  #           wine${{ matrix.build }}
+
+  #     - name: Upload
+  #       uses: actions/upload-artifact@v2
+  #       with:
+  #         name: ${{ matrix.ref }}-${{ matrix.build }}-${{ matrix.config }}.tar.xz
+  #         path: ${{ matrix.ref }}-${{ matrix.build }}-${{ matrix.config }}.tar.xz
+
+  # release:
+  #   runs-on: ubuntu-latest
+  #   needs: [matrix, build]
+  #   strategy:
+  #     matrix:
+  #       ref: ${{ fromJson(needs.matrix.outputs.refs) }}
+
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v2.3.2
+
+  #     - name: Download
+  #       uses: actions/download-artifact@v2
+
+  #     - name: Release
+  #       run: |
+  #         hub release create -m "${{ matrix.ref }} builds" $(find . -type f -name '${{ matrix.ref }}-*.tar.xz' -printf '-a %p ') ${{ matrix.ref }}-builds
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  clean:
     runs-on: ubuntu-latest
-    needs: matrix
-    strategy:
-      matrix:
-        build: ${{ fromJson(needs.matrix.outputs.builds) }}
-        config: ${{ fromJson(needs.matrix.outputs.configs) }}
-        ref: ${{ fromJson(needs.matrix.outputs.refs) }}
-
-    env:
-      ARCH_32: i686
-      ARCH_64: x86_64
-      CONFIGURE_OPTS: --silent --disable-tests CROSSDEBUG=split
-      CONFIGURE_OPTS_llvm: --with-mingw CROSSCFLAGS="-Wno-pragma-pack -Wno-unknown-warning-option" DELAYLOADFLAG=-Wl,-delayload,
-      CONFIGURE_OPTS_32:
-      CONFIGURE_OPTS_64: --enable-win64
-
+    needs: [matrix]
     steps:
       - name: Checkout
-        uses: actions/checkout@v2.3.2
+        uses: actions/checkout@v2
+      - name: Cleanup
+        uses: rbernon/workflow-cleanup@main
         with:
-          repository: ${{ env.repository }}
-          ref: ${{ matrix.ref }}
-
-      - name: Cache
-        uses: actions/cache@v1.1.0
-        with:
-          path: .ccache
-          key:
-            ccache-linux-${{ matrix.build }}-${{ matrix.config }}-${{ matrix.ref }}-${ { github.sha }}
-          restore-keys: |
-            ccache-linux-${{ matrix.build }}-${{ matrix.config }}-${{ matrix.ref }}-
-            ccache-linux-${{ matrix.build }}-${{ matrix.config }}-
-            ccache-linux-${{ matrix.build }}-
-
-      - name: Toolchain
-        run: |
-          docker pull rbernon/wine-llvm-$ARCH_${{ matrix.build }}:latest
-          docker tag rbernon/wine-llvm-$ARCH_${{ matrix.build }}:latest build-image:latest
-        if: ${{ endsWith(matrix.config, 'llvm-mingw') }}
-
-      - name: Toolchain
-        run: |
-          docker pull rbernon/wine-$ARCH_${{ matrix.build }}:latest
-          docker tag rbernon/wine-$ARCH_${{ matrix.build }}:latest build-image:latest
-        if: ${{ !endsWith(matrix.config, 'llvm-mingw') }}
-
-      - name: Prepare
-        run: |
-          autoreconf -fi
-          ./tools/make_requests
-
-      - name: Configure
-        run: |
-          export CCACHE_DIR=$PWD/.ccache
-          export PATH=/usr/lib/ccache:$PATH
-          export CONFIGURE_OPTS="$CONFIGURE_OPTS --${{ matrix.config }}"
-          export CONFIGURE_OPTS="${CONFIGURE_OPTS/--with-llvm-mingw/$CONFIGURE_OPTS_llvm}"
-          docker run --rm -e USER -e HOME -e PATH -e CCACHE_DIR -e USERID=$(id -u) -u $(id -u):$(id -g) -w $PWD -v $HOME:$HOME build-image:latest \
-          bash -c "mkdir build && cd build && ../configure $CONFIGURE_OPTS $CONFIGURE_OPTS_${{ matrix.build }}"
-
-      - name: Build
-        run: |
-          export CCACHE_DIR=$PWD/.ccache
-          export PATH=/usr/lib/ccache:$PATH
-          docker run --rm -e USER -e HOME -e PATH -e CCACHE_DIR -e USERID=$(id -u) -u $(id -u):$(id -g) -w $PWD -v $HOME:$HOME build-image:latest \
-          make -C build --silent -j4
-
-      - name: Archive
-        run: |
-          mv build wine${{ matrix.build }}
-          tar chJf ${{ matrix.ref }}-${{ matrix.build }}-${{ matrix.config }}.tar.xz \
-            --exclude=*.o --exclude=*.a --exclude=*.debug --exclude=*.pdb \
-            wine${{ matrix.build }}
-
-      - name: Upload
-        uses: actions/upload-artifact@v2
-        with:
-          name: ${{ matrix.ref }}-${{ matrix.build }}-${{ matrix.config }}.tar.xz
-          path: ${{ matrix.ref }}-${{ matrix.build }}-${{ matrix.config }}.tar.xz
-
-  release:
-    runs-on: ubuntu-latest
-    needs: [matrix, build]
-    strategy:
-      matrix:
-        ref: ${{ fromJson(needs.matrix.outputs.refs) }}
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2.3.2
-
-      - name: Download
-        uses: actions/download-artifact@v2
-
-      - name: Release
-        run: |
-          hub release create -m "${{ matrix.ref }} builds" $(find . -type f -name '${{ matrix.ref }}-*.tar.xz' -printf '-a %p ') ${{ matrix.ref }}-builds
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          workflow: linux.yml

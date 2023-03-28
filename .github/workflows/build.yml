@@ -1,0 +1,113 @@
+name: build
+on:
+  push:
+  schedule:
+    - cron: '30 3 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: rbernon/winehq:latest
+      options: --user root
+    strategy:
+      matrix:
+        arch: [win32, win64]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Environ
+        run: |
+          echo "CONFIGURE_ARGS_win64=--enable-win64 --enable-win64 --enable-archs=i386,x86_64" >> $GITHUB_ENV
+          echo "CONFIGURE_ARGS_win32=" >> $GITHUB_ENV
+          echo "PATH=/usr/lib/ccache:$PATH" >> $GITHUB_ENV
+          echo "CCACHE_COMPILERCHECK=none" >> $GITHUB_ENV
+          echo "CCACHE_BASEDIR=$PWD/wine" >> $GITHUB_ENV
+          echo "CCACHE_DIR=$PWD/.ccache" >> $GITHUB_ENV
+          echo "CCACHE_COMPRESSLEVEL=10" >> $GITHUB_ENV
+          echo "CCACHE_COMPRESS=1" >> $GITHUB_ENV
+          echo "MAKE=make -s -j8" >> $GITHUB_ENV
+
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: .ccache
+          key:
+            cache-${{ matrix.arch }}-${{ github.run_id }}
+          restore-keys: |
+            cache-${{ matrix.arch }}
+
+      - name: Build
+        run: |
+          git clone https://gitlab.winehq.org/wine/wine.git
+          env -C wine tools/make_requests
+          env -C wine tools/make_makefiles
+          env -C wine autoreconf -f
+
+          rm build -rf; mkdir -p build
+          env -C build ../wine/configure -q -C CROSSDEBUG=split --with-mingw $CONFIGURE_ARGS_${{ matrix.arch }}
+          $MAKE -C build
+
+          $MAKE -C build DESTDIR=$PWD install-lib install-test
+          find usr -type f -iname '*.debug' -delete
+          ccache --recompress 10
+
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-${{ matrix.arch }}
+          path: usr
+
+  test:
+    needs: [build]
+    runs-on: ubuntu-latest
+    container:
+      image: rbernon/winehq:latest
+      options: --user root
+    strategy:
+      matrix:
+        arch: [win32, win64]
+        wm: [nulldrv, desktop, fvwm, openbox, kwin, mutter]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Environ
+        run: |
+          echo "GECKO_VER=2.47.3" >> $GITHUB_ENV
+          echo "MONO_VER=7.4.0" >> $GITHUB_ENV
+
+      - name: Download
+        uses: actions/download-artifact@v3
+        with:
+          name: build-${{ matrix.arch }}
+
+      - name: Test
+        run: |
+          useradd github && mkdir -p /home/github /home/github/Documents /home/github/Desktop && chown github:github -R /home/github
+
+          mkdir -p local/share/wine/gecko local/share/wine/mono
+          curl -o local/share/wine/gecko/wine-gecko-$GECKO_VER-x86.msi    https://dl.winehq.org/wine/wine-gecko/$GECKO_VER/wine-gecko-$GECKO_VER-x86.msi
+          curl -o local/share/wine/gecko/wine-gecko-$GECKO_VER-x86_64.msi https://dl.winehq.org/wine/wine-gecko/$GECKO_VER/wine-gecko-$GECKO_VER-x86_64.msi
+          curl -o local/share/wine/mono/wine-mono-$MONO_VER-x86.msi       https://dl.winehq.org/wine/wine-mono/$MONO_VER/wine-mono-$MONO_VER-x86.msi
+          chmod +x $PWD/local/bin/*
+
+          su - github $PWD/run-tests $PWD ${{ matrix.arch }} ${{ matrix.wm }}
+
+      # - name: Upload
+      #   uses: actions/upload-artifact@v3
+      #   with:
+      #     name: winetest-${{ matrix.wm }}-${{ matrix.arch }}.report
+      #     path: /home/github/*.report
+
+  clean:
+    needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cleanup
+        uses: rbernon/workflow-cleanup@main
+        with:
+          workflow: all

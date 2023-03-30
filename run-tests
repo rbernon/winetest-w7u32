@@ -49,6 +49,27 @@ xrandr
 
 pulseaudio --start --exit-idle-time=-1
 
+. /etc/os-release
+INFO="Docker running $PRETTY_NAME / $(uname -a), "
+INFO="$INFO[CPU:$(nproc)*$(lscpu|grep "Model name:"|cut -d: -f2-|xargs echo)"
+INFO="$INFO RAM:$(grep "MemTotal:" /proc/meminfo|cut -d: -f2-|tr -d ' ') display:dummy"
+case $WM in
+  fvwm)     INFO="$INFO $(/usr/bin/fvwm --version|head -1)";;
+  i3)       INFO="$INFO $(/usr/bin/i3 --version|head -1)";;
+  kwin)     INFO="$INFO $(/usr/bin/kwin_x11 --version|head -1)";;
+  lwm)      INFO="$INFO $(/usr/bin/lwm --version|head -1)";;
+  marco)    INFO="$INFO $(/usr/bin/marco --version|head -1)";;
+  metacity) INFO="$INFO $(/usr/bin/metacity --version|head -1)";;
+  muffin)   INFO="$INFO $(/usr/bin/muffin --version|head -1)";;
+  mutter)   INFO="$INFO $(/usr/bin/mutter --version|head -1)";;
+  openbox)  INFO="$INFO $(/usr/bin/openbox --version|head -1)";;
+  xfwm4)    INFO="$INFO $(/usr/bin/xfwm4 --version|head -1)";;
+  xmonad)   INFO="$INFO $(/usr/bin/xmonad --version|head -1)";;
+  nulldrv)  INFO="$INFO with nulldrv driver";;
+  desktop)  INFO="$INFO with virtual desktop";;
+esac
+INFO="$INFO]"
+
 case $WM in
   fvwm)     DRIVER=x11;  WM=$DRIVER-$WM;;
   i3)       DRIVER=x11;  WM=$DRIVER-$WM;;
@@ -69,5 +90,5 @@ wine reg add "HKCU\\Software\\Wine\\WineDbg" /v "ShowCrashDialog" /t REG_DWORD /
 wine reg add "HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AeDebug" /v "Auto" /t REG_DWORD /d 1 /f
 wineserver -w
 
-wine $WINETEST -q -t rbernon-$WM-$ARCH \
+wine $WINETEST -q -t rbernon-$WM-$ARCH -i "$INFO" \
   -m "Rémi Bernon <rbernon@codeweavers.com>" ||:

@@ -5,6 +5,18 @@ set -Eeux
 WDIR=$1
 ARCH=$2
 WM=$3
+EVENT=$4
+
+# do not submit these wm
+case $WM in
+  i3)       EVENT=push;;
+  lwm)      EVENT=push;;
+  marco)    EVENT=push;;
+  metacity) EVENT=push;;
+  muffin)   EVENT=push;;
+  xfwm4)    EVENT=push;;
+  xmonad)   EVENT=push;;
+esac
 
 case $ARCH in
   win32) WINETEST=$WDIR/local/lib/wine/i386-windows/winetest.exe;;
@@ -90,5 +102,10 @@ wine reg add "HKCU\\Software\\Wine\\WineDbg" /v "ShowCrashDialog" /t REG_DWORD /
 wine reg add "HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AeDebug" /v "Auto" /t REG_DWORD /d 1 /f
 wineserver -w
 
-wine $WINETEST -q -t rbernon-$WM-$ARCH -i "$INFO" \
+case $EVENT in
+  push) OUTPUT="-o $WM-$ARCH.report";;
+  *) OUTPUT="";;
+esac
+
+wine $WINETEST -q $OUTPUT -t rbernon-$WM-$ARCH -i "$INFO" \
   -m "Rémi Bernon <rbernon@codeweavers.com>" ||:

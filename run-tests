@@ -91,10 +91,16 @@ case $WM in
   nulldrv)  DRIVER=null;;
 esac
 
-env -C $HOME startx -- -config xorg.conf $DISPLAY & sleep 1
-xrandr --addmode default 1024x768
-xrandr --output default --mode 1024x768
-xrandr
+case $DRIVER in
+  x11)
+    env -C $HOME startx -- -config xorg.conf $DISPLAY & sleep 1
+    xrandr --addmode default 1024x768
+    xrandr --output default --mode 1024x768
+    xrandr
+    ;;
+  null)
+    ;;
+esac
 
 pulseaudio --start --exit-idle-time=-1
 

@@ -53,13 +53,6 @@ case $WM in
   xfwm4)    echo "exec /usr/bin/xfwm4 2>/dev/null" >$HOME/.xinitrc;;
   xmonad)   echo "exec /usr/bin/xmonad 2>/dev/null" >$HOME/.xinitrc;;
 esac
-env -C $HOME startx -- -config xorg.conf $DISPLAY & sleep 1
-
-xrandr --addmode default 1024x768
-xrandr --output default --mode 1024x768
-xrandr
-
-pulseaudio --start --exit-idle-time=-1
 
 . /etc/os-release
 INFO="Docker running $PRETTY_NAME / $(uname -a), "
@@ -97,6 +90,14 @@ case $WM in
   desktop)  DRIVER=x11;  WM=$DRIVER-$WM; wine reg add "HKCU\\Software\\Wine\\Explorer\\Desktops" /v "Default" /d "800x600" /f;;
   nulldrv)  DRIVER=null;;
 esac
+
+env -C $HOME startx -- -config xorg.conf $DISPLAY & sleep 1
+xrandr --addmode default 1024x768
+xrandr --output default --mode 1024x768
+xrandr
+
+pulseaudio --start --exit-idle-time=-1
+
 wine reg add "HKCU\\Software\\Wine\\Drivers" /v "Graphics" /d "$DRIVER" /f
 wine reg add "HKCU\\Software\\Wine\\WineDbg" /v "ShowCrashDialog" /t REG_DWORD /d 0 /f
 wine reg add "HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AeDebug" /v "Auto" /t REG_DWORD /d 1 /f

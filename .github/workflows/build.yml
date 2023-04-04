@@ -69,7 +69,7 @@ jobs:
     strategy:
       matrix:
         arch: [win32, win64]
-        wm: [nulldrv, desktop, fvwm, openbox, kwin, mutter]
+        wm: [nulldrv, desktop, fvwm, openbox, kwin, mutter, wayland]
 
     steps:
       - name: Checkout

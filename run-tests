@@ -26,6 +26,7 @@ esac
 export DISPLAY=:0
 export LC_ALL=C.UTF-8
 export PATH="$WDIR/local/bin:$PATH"
+export XDG_RUNTIME_DIR=$(mkdir -p $HOME/.run && chmod 700 $HOME/.run && echo $HOME/.run)
 
 export WINEARCH=$ARCH
 export WINEPREFIX=$HOME/$ARCH
@@ -52,6 +53,7 @@ case $WM in
   openbox)  echo "exec /usr/bin/openbox 2>/dev/null" >$HOME/.xinitrc;;
   xfwm4)    echo "exec /usr/bin/xfwm4 2>/dev/null" >$HOME/.xinitrc;;
   xmonad)   echo "exec /usr/bin/xmonad 2>/dev/null" >$HOME/.xinitrc;;
+  wayland)  echo "" >$HOME/.xinitrc;;
 esac
 
 . /etc/os-release
@@ -72,6 +74,7 @@ case $WM in
   xmonad)   INFO="$INFO $(/usr/bin/xmonad --version|head -1)";;
   nulldrv)  INFO="$INFO with nulldrv driver";;
   desktop)  INFO="$INFO with virtual desktop";;
+  wayland)  INFO="$INFO $(/usr/bin/weston --version|head -1) (headless)";;
 esac
 INFO="$INFO]"
 
@@ -89,6 +92,7 @@ case $WM in
   xmonad)   DRIVER=x11;  WM=$DRIVER-$WM;;
   desktop)  DRIVER=x11;  WM=$DRIVER-$WM; wine reg add "HKCU\\Software\\Wine\\Explorer\\Desktops" /v "Default" /d "800x600" /f;;
   nulldrv)  DRIVER=null;;
+  wayland)  DRIVER=wayland; WM=$DRIVER;;
 esac
 
 case $DRIVER in
@@ -97,6 +101,10 @@ case $DRIVER in
     xrandr --addmode default 1024x768
     xrandr --output default --mode 1024x768
     xrandr
+    ;;
+  wayland)
+    weston --backend=headless-backend.so & sleep 1
+    export WAYLAND_DISPLAY="$(find $XDG_RUNTIME_DIR/wayland-[0-9] -printf %f)"
     ;;
   null)
     ;;

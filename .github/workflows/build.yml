@@ -77,7 +77,7 @@ jobs:
 
       - name: Environ
         run: |
-          echo "GECKO_VER=2.47.3" >> $GITHUB_ENV
+          echo "GECKO_VER=2.47.4" >> $GITHUB_ENV
           echo "MONO_VER=7.4.0" >> $GITHUB_ENV
 
       - name: Download

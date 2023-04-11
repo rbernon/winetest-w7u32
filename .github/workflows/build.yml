@@ -54,6 +54,15 @@ jobs:
           find usr -type f -iname '*.debug' -delete
           ccache --recompress 10
 
+          mkdir -p usr/local/share/wine/gecko
+          GECKO_VER="$(grep GECKO_VER: wine/tools/gitlab/test.yml | awk '{print $2}')"
+          curl -o usr/local/share/wine/gecko/wine-gecko-$GECKO_VER-x86.msi    https://dl.winehq.org/wine/wine-gecko/$GECKO_VER/wine-gecko-$GECKO_VER-x86.msi
+          curl -o usr/local/share/wine/gecko/wine-gecko-$GECKO_VER-x86_64.msi https://dl.winehq.org/wine/wine-gecko/$GECKO_VER/wine-gecko-$GECKO_VER-x86_64.msi
+
+          mkdir -p usr/local/share/wine/mono
+          MONO_VER="$(grep MONO_VER: wine/tools/gitlab/test.yml | awk '{print $2}')"
+          curl -o usr/local/share/wine/mono/wine-mono-$MONO_VER-x86.msi       https://dl.winehq.org/wine/wine-mono/$MONO_VER/wine-mono-$MONO_VER-x86.msi
+
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
@@ -75,11 +84,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Environ
-        run: |
-          echo "GECKO_VER=2.47.4" >> $GITHUB_ENV
-          echo "MONO_VER=7.4.0" >> $GITHUB_ENV
-
       - name: Download
         uses: actions/download-artifact@v3
         with:
@@ -87,14 +91,8 @@ jobs:
 
       - name: Test
         run: |
+          chmod +x local/bin/*
           useradd github && mkdir -p /home/github /home/github/Documents /home/github/Desktop && chown github:github -R /home/github
-
-          mkdir -p local/share/wine/gecko local/share/wine/mono
-          curl -o local/share/wine/gecko/wine-gecko-$GECKO_VER-x86.msi    https://dl.winehq.org/wine/wine-gecko/$GECKO_VER/wine-gecko-$GECKO_VER-x86.msi
-          curl -o local/share/wine/gecko/wine-gecko-$GECKO_VER-x86_64.msi https://dl.winehq.org/wine/wine-gecko/$GECKO_VER/wine-gecko-$GECKO_VER-x86_64.msi
-          curl -o local/share/wine/mono/wine-mono-$MONO_VER-x86.msi       https://dl.winehq.org/wine/wine-mono/$MONO_VER/wine-mono-$MONO_VER-x86.msi
-          chmod +x $PWD/local/bin/*
-
           su - github $PWD/run-tests $PWD ${{ matrix.arch }} ${{ matrix.wm }} ${{ github.event_name }}
 
       - name: Upload

@@ -1,0 +1,45 @@
+#!/bin/bash
+
+set -Eeux
+
+WDIR=$1
+ARCH=$2
+TEST=$3
+EVENT=$4
+
+case $ARCH in
+  win32) WINETEST=$WDIR/local/lib/wine/i386-windows/winetest.exe; WINE=wine;;
+  win64) WINETEST=$WDIR/local/lib/wine/x86_64-windows/winetest.exe; WINE=wine;;
+esac
+
+export LC_ALL=C.UTF-8
+export PATH="$WDIR/local/bin:$PATH"
+
+export WINEARCH=$ARCH
+export WINEPREFIX=$HOME/$ARCH
+export WINEDEBUG=err-all,fixme-all
+
+INFO="$(sw_vers|cut -d: -f2-|xargs echo) / $(uname -a), "
+INFO="$INFO[CPU:$(sysctl -a|grep core_count|cut -d: -f2-|xargs echo)*$(sysctl -a|grep brand_string|cut -d: -f2-|xargs echo)"
+INFO="$INFO RAM:$(sysctl -a|grep hw.memsize|cut -d: -f2-|xargs -I{} echo {}/1024/1024|bc)MiB"
+INFO="$INFO GPU:$(system_profiler SPDisplaysDataType|grep -e Model: -e VRAM -e Resolution:|cut -d: -f2-|xargs echo)"
+INFO="$INFO]"
+
+case $TEST in
+  opengl) DRIVER=mac; RENDERER=opengl; TEST=macos-$RENDERER;;
+  vulkan) DRIVER=mac; RENDERER=vulkan; TEST=macos-$RENDERER;;
+esac
+
+$WINE reg add "HKCU\\Software\\Wine\\Drivers" /v "Graphics" /d "$DRIVER" /f
+$WINE reg add "HKCU\\Software\\Wine\\Direct3D" /v "Renderer" /d "$RENDERER" /f
+$WINE reg add "HKCU\\Software\\Wine\\WineDbg" /v "ShowCrashDialog" /t REG_DWORD /d 0 /f
+$WINE reg add "HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AeDebug" /v "Auto" /t REG_DWORD /d 1 /f
+wineserver -w
+
+case $EVENT in
+  push) OUTPUT="-o $TEST-$ARCH.report";;
+  *) OUTPUT="";;
+esac
+
+$WINE $WINETEST -q $OUTPUT -t rbernon-$TEST-$ARCH -i "$INFO" \
+  -m "Rémi Bernon <rbernon@codeweavers.com>" ||:

@@ -26,7 +26,6 @@ jobs:
             cache-linux-${{ matrix.arch }}-${{ github.run_id }}
           restore-keys: |
             cache-linux-${{ matrix.arch }}
-            cache-${{ matrix.arch }}
 
       - name: Build
         run: |
@@ -70,8 +69,65 @@ jobs:
           name: test-linux-${{ matrix.test }}-${{ matrix.arch }}.report
           path: /home/github/*.report
 
+  build-macos:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        arch: [win64]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Cache
+        uses: actions/cache@v3
+        with:
+          path: .ccache
+          key:
+            cache-macos-${{ matrix.arch }}-${{ github.run_id }}
+          restore-keys: |
+            cache-macos-${{ matrix.arch }}
+
+      - name: Build
+        run: |
+          $PWD/build-macos ${{ matrix.arch }}
+
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-macos-${{ matrix.arch }}
+          path: usr
+
+  test-macos:
+    needs: [build-macos]
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        arch: [win64]
+        test: [opengl, vulkan]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Download
+        uses: actions/download-artifact@v3
+        with:
+          name: build-macos-${{ matrix.arch }}
+
+      - name: Test
+        run: |
+          chmod +x local/bin/*
+          $PWD/test-macos $PWD ${{ matrix.arch }} ${{ matrix.test }} ${{ github.event_name }}
+
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-macos-${{ matrix.arch }}.report
+          path: macos-*.report
+
   clean:
-    needs: [test-linux]
+    needs: [test-linux, test-macos]
     runs-on: ubuntu-latest
     steps:
       - name: Cleanup

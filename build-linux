@@ -1,0 +1,39 @@
+#!/bin/bash
+
+set -Eeux
+
+case $1 in
+    win64) export CONFIGURE_ARGS="--enable-win64 --enable-win64 --enable-archs=i386,x86_64";;
+    win32) export CONFIGURE_ARGS="";;
+esac
+
+export MAKE="make -s -j8"
+export PATH="/usr/lib/ccache:$PATH"
+
+export CCACHE_BASEDIR="$PWD/wine"
+export CCACHE_COMPILERCHECK="none"
+export CCACHE_COMPRESS="1"
+export CCACHE_COMPRESSLEVEL="10"
+export CCACHE_DIR="$PWD/.ccache"
+
+git clone https://gitlab.winehq.org/wine/wine.git
+env -C wine tools/make_requests
+env -C wine tools/make_makefiles
+env -C wine autoreconf -f
+
+rm build -rf; mkdir -p build
+env -C build ../wine/configure -q -C CROSSDEBUG=split --with-mingw $CONFIGURE_ARGS
+$MAKE -C build
+
+$MAKE -C build DESTDIR=$PWD install-lib install-test
+find usr -type f -iname '*.debug' -delete
+ccache --recompress 10
+
+mkdir -p usr/local/share/wine/gecko
+GECKO_VER="$(grep GECKO_VER: wine/tools/gitlab/test.yml | awk '{print $2}')"
+curl -o usr/local/share/wine/gecko/wine-gecko-$GECKO_VER-x86.msi    https://dl.winehq.org/wine/wine-gecko/$GECKO_VER/wine-gecko-$GECKO_VER-x86.msi
+curl -o usr/local/share/wine/gecko/wine-gecko-$GECKO_VER-x86_64.msi https://dl.winehq.org/wine/wine-gecko/$GECKO_VER/wine-gecko-$GECKO_VER-x86_64.msi
+
+mkdir -p usr/local/share/wine/mono
+MONO_VER="$(grep MONO_VER: wine/tools/gitlab/test.yml | awk '{print $2}')"
+curl -o usr/local/share/wine/mono/wine-mono-$MONO_VER-x86.msi       https://dl.winehq.org/wine/wine-mono/$MONO_VER/wine-mono-$MONO_VER-x86.msi

@@ -17,9 +17,6 @@ export CCACHE_COMPRESSLEVEL="10"
 export CCACHE_DIR="$PWD/.ccache"
 
 git clone https://gitlab.winehq.org/wine/wine.git
-env -C wine tools/make_requests
-env -C wine tools/make_makefiles
-env -C wine autoreconf -f
 
 rm build -rf; mkdir -p build
 env -C build ../wine/configure -q -C CROSSDEBUG=split --with-mingw $CONFIGURE_ARGS

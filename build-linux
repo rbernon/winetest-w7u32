@@ -19,7 +19,7 @@ export CCACHE_DIR="$PWD/.ccache"
 git clone https://gitlab.winehq.org/wine/wine.git
 
 rm build -rf; mkdir -p build
-env -C build ../wine/configure -q -C CROSSDEBUG=split --with-mingw $CONFIGURE_ARGS
+env -C build ../wine/configure -q CROSSDEBUG=split --with-mingw $CONFIGURE_ARGS
 $MAKE -C build
 
 $MAKE -C build DESTDIR=$PWD install-lib install-test

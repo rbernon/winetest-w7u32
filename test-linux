@@ -4,11 +4,11 @@ set -Eeux
 
 WDIR=$1
 ARCH=$2
-WM=$3
+TEST=$3
 EVENT=$4
 
 # do not submit these wm
-case $WM in
+case $TEST in
   i3)       EVENT=push;;
   lwm)      EVENT=push;;
   marco)    EVENT=push;;
@@ -39,7 +39,7 @@ echo '  Driver "dummy"' >> $HOME/xorg.conf
 echo '  VideoRam 32768' >> $HOME/xorg.conf
 echo 'EndSection' >> $HOME/xorg.conf
 
-case $WM in
+case $TEST in
   fvwm)     echo "exec /usr/bin/fvwm -f config -c \"Style * MwmDecor\" -c \"Style * UsePPosition\" 2>/dev/null" >$HOME/.xinitrc;;
   i3)       echo "exec /usr/bin/i3 2>/dev/null" >$HOME/.xinitrc;;
   kwin)     echo "exec /usr/bin/kwin_x11 2>/dev/null" >$HOME/.xinitrc;;
@@ -61,7 +61,7 @@ esac
 INFO="Docker running $PRETTY_NAME / $(uname -a), "
 INFO="$INFO[CPU:$(nproc)*$(lscpu|grep "Model name:"|cut -d: -f2-|xargs echo)"
 INFO="$INFO RAM:$(grep "MemTotal:" /proc/meminfo|cut -d: -f2-|tr -d ' ') display:dummy"
-case $WM in
+case $TEST in
   fvwm)     INFO="$INFO $(/usr/bin/fvwm --version|head -1)";;
   i3)       INFO="$INFO $(/usr/bin/i3 --version|head -1)";;
   kwin)     INFO="$INFO $(/usr/bin/kwin_x11 --version|head -1)";;
@@ -80,22 +80,22 @@ case $WM in
 esac
 INFO="$INFO]"
 
-case $WM in
-  fvwm)     DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM;;
-  i3)       DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM;;
-  kwin)     DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM;;
-  lwm)      DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM;;
-  marco)    DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM;;
-  metacity) DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM;;
-  muffin)   DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM;;
-  mutter)   DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM;;
-  openbox)  DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM;;
-  xfwm4)    DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM;;
-  xmonad)   DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM;;
-  desktop)  DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM; $WINE reg add "HKCU\\Software\\Wine\\Explorer\\Desktops" /v "Default" /d "800x600" /f;;
+case $TEST in
+  fvwm)     DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;
+  i3)       DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;
+  kwin)     DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;
+  lwm)      DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;
+  marco)    DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;
+  metacity) DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;
+  muffin)   DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;
+  mutter)   DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;
+  openbox)  DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;
+  xfwm4)    DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;
+  xmonad)   DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;
+  desktop)  DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST; $WINE reg add "HKCU\\Software\\Wine\\Explorer\\Desktops" /v "Default" /d "800x600" /f;;
   nulldrv)  DRIVER=null; RENDERER=gl;;
-  wayland)  DRIVER=wayland; RENDERER=gl; WM=$DRIVER;;
-  vulkan)   DRIVER=x11; RENDERER=vulkan; WM=$RENDERER;;
+  wayland)  DRIVER=wayland; RENDERER=gl; TEST=$DRIVER;;
+  vulkan)   DRIVER=x11; RENDERER=vulkan; TEST=$RENDERER;;
 esac
 
 case $DRIVER in
@@ -122,9 +122,9 @@ $WINE reg add "HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AeDebug" /
 wineserver -w
 
 case $EVENT in
-  push) OUTPUT="-o $WM-$ARCH.report";;
+  push) OUTPUT="-o $TEST-$ARCH.report";;
   *) OUTPUT="";;
 esac
 
-$WINE $WINETEST -q $OUTPUT -t rbernon-$WM-$ARCH -i "$INFO" \
+$WINE $WINETEST -q $OUTPUT -t rbernon-$TEST-$ARCH -i "$INFO" \
   -m "Rémi Bernon <rbernon@codeweavers.com>" ||:

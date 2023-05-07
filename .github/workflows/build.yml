@@ -47,7 +47,7 @@ jobs:
     strategy:
       matrix:
         arch: [win32, win64]
-        wm: [nulldrv, desktop, fvwm, openbox, kwin, mutter, wayland, vulkan]
+        test: [nulldrv, desktop, fvwm, openbox, kwin, mutter, wayland, vulkan]
 
     steps:
       - name: Checkout
@@ -62,12 +62,12 @@ jobs:
         run: |
           chmod +x local/bin/*
           useradd github && mkdir -p /home/github /home/github/Documents /home/github/Desktop && chown github:github -R /home/github
-          su - github $PWD/test-linux $PWD ${{ matrix.arch }} ${{ matrix.wm }} ${{ github.event_name }}
+          su - github $PWD/test-linux $PWD ${{ matrix.arch }} ${{ matrix.test }} ${{ github.event_name }}
 
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
-          name: test-linux-${{ matrix.wm }}-${{ matrix.arch }}.report
+          name: test-linux-${{ matrix.test }}-${{ matrix.arch }}.report
           path: /home/github/*.report
 
   clean:

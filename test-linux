@@ -19,8 +19,8 @@ case $WM in
 esac
 
 case $ARCH in
-  win32) WINETEST=$WDIR/local/lib/wine/i386-windows/winetest.exe;;
-  win64) WINETEST=$WDIR/local/lib/wine/x86_64-windows/winetest.exe;;
+  win32) WINETEST=$WDIR/local/lib/wine/i386-windows/winetest.exe; WINE=wine;;
+  win64) WINETEST=$WDIR/local/lib/wine/x86_64-windows/winetest.exe; WINE=wine;;
 esac
 
 export DISPLAY=:0
@@ -92,7 +92,7 @@ case $WM in
   openbox)  DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM;;
   xfwm4)    DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM;;
   xmonad)   DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM;;
-  desktop)  DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM; wine reg add "HKCU\\Software\\Wine\\Explorer\\Desktops" /v "Default" /d "800x600" /f;;
+  desktop)  DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM; $WINE reg add "HKCU\\Software\\Wine\\Explorer\\Desktops" /v "Default" /d "800x600" /f;;
   nulldrv)  DRIVER=null; RENDERER=gl;;
   wayland)  DRIVER=wayland; RENDERER=gl; WM=$DRIVER;;
   vulkan)   DRIVER=x11; RENDERER=vulkan; WM=$RENDERER;;
@@ -115,10 +115,10 @@ esac
 
 pulseaudio --start --exit-idle-time=-1
 
-wine reg add "HKCU\\Software\\Wine\\Drivers" /v "Graphics" /d "$DRIVER" /f
-wine reg add "HKCU\\Software\\Wine\\Direct3D" /v "Renderer" /d "$RENDERER" /f
-wine reg add "HKCU\\Software\\Wine\\WineDbg" /v "ShowCrashDialog" /t REG_DWORD /d 0 /f
-wine reg add "HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AeDebug" /v "Auto" /t REG_DWORD /d 1 /f
+$WINE reg add "HKCU\\Software\\Wine\\Drivers" /v "Graphics" /d "$DRIVER" /f
+$WINE reg add "HKCU\\Software\\Wine\\Direct3D" /v "Renderer" /d "$RENDERER" /f
+$WINE reg add "HKCU\\Software\\Wine\\WineDbg" /v "ShowCrashDialog" /t REG_DWORD /d 0 /f
+$WINE reg add "HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AeDebug" /v "Auto" /t REG_DWORD /d 1 /f
 wineserver -w
 
 case $EVENT in
@@ -126,5 +126,5 @@ case $EVENT in
   *) OUTPUT="";;
 esac
 
-wine $WINETEST -q $OUTPUT -t rbernon-$WM-$ARCH -i "$INFO" \
+$WINE $WINETEST -q $OUTPUT -t rbernon-$WM-$ARCH -i "$INFO" \
   -m "Rémi Bernon <rbernon@codeweavers.com>" ||:

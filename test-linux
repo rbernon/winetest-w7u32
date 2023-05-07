@@ -54,6 +54,7 @@ case $WM in
   xfwm4)    echo "exec /usr/bin/xfwm4 2>/dev/null" >$HOME/.xinitrc;;
   xmonad)   echo "exec /usr/bin/xmonad 2>/dev/null" >$HOME/.xinitrc;;
   wayland)  echo "" >$HOME/.xinitrc;;
+  vulkan)   echo "exec /usr/bin/fvwm -f config -c \"Style * MwmDecor\" -c \"Style * UsePPosition\" 2>/dev/null" >$HOME/.xinitrc;;
 esac
 
 . /etc/os-release
@@ -75,24 +76,26 @@ case $WM in
   nulldrv)  INFO="$INFO with nulldrv driver";;
   desktop)  INFO="$INFO with virtual desktop";;
   wayland)  INFO="$INFO $(/usr/bin/weston --version|head -1) (headless)";;
+  vulkan)   INFO="$INFO with vulkan Direct3D Renderer";;
 esac
 INFO="$INFO]"
 
 case $WM in
-  fvwm)     DRIVER=x11;  WM=$DRIVER-$WM;;
-  i3)       DRIVER=x11;  WM=$DRIVER-$WM;;
-  kwin)     DRIVER=x11;  WM=$DRIVER-$WM;;
-  lwm)      DRIVER=x11;  WM=$DRIVER-$WM;;
-  marco)    DRIVER=x11;  WM=$DRIVER-$WM;;
-  metacity) DRIVER=x11;  WM=$DRIVER-$WM;;
-  muffin)   DRIVER=x11;  WM=$DRIVER-$WM;;
-  mutter)   DRIVER=x11;  WM=$DRIVER-$WM;;
-  openbox)  DRIVER=x11;  WM=$DRIVER-$WM;;
-  xfwm4)    DRIVER=x11;  WM=$DRIVER-$WM;;
-  xmonad)   DRIVER=x11;  WM=$DRIVER-$WM;;
-  desktop)  DRIVER=x11;  WM=$DRIVER-$WM; wine reg add "HKCU\\Software\\Wine\\Explorer\\Desktops" /v "Default" /d "800x600" /f;;
-  nulldrv)  DRIVER=null;;
-  wayland)  DRIVER=wayland; WM=$DRIVER;;
+  fvwm)     DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM;;
+  i3)       DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM;;
+  kwin)     DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM;;
+  lwm)      DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM;;
+  marco)    DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM;;
+  metacity) DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM;;
+  muffin)   DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM;;
+  mutter)   DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM;;
+  openbox)  DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM;;
+  xfwm4)    DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM;;
+  xmonad)   DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM;;
+  desktop)  DRIVER=x11; RENDERER=gl;  WM=$DRIVER-$WM; wine reg add "HKCU\\Software\\Wine\\Explorer\\Desktops" /v "Default" /d "800x600" /f;;
+  nulldrv)  DRIVER=null; RENDERER=gl;;
+  wayland)  DRIVER=wayland; RENDERER=gl; WM=$DRIVER;;
+  vulkan)   DRIVER=x11; RENDERER=vulkan; WM=$RENDERER;;
 esac
 
 case $DRIVER in
@@ -113,6 +116,7 @@ esac
 pulseaudio --start --exit-idle-time=-1
 
 wine reg add "HKCU\\Software\\Wine\\Drivers" /v "Graphics" /d "$DRIVER" /f
+wine reg add "HKCU\\Software\\Wine\\Direct3D" /v "Renderer" /d "$RENDERER" /f
 wine reg add "HKCU\\Software\\Wine\\WineDbg" /v "ShowCrashDialog" /t REG_DWORD /d 0 /f
 wine reg add "HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AeDebug" /v "Auto" /t REG_DWORD /d 1 /f
 wineserver -w

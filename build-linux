@@ -34,3 +34,5 @@ curl -o usr/local/share/wine/gecko/wine-gecko-$GECKO_VER-x86_64.msi https://dl.w
 mkdir -p usr/local/share/wine/mono
 MONO_VER="$(grep MONO_VER: wine/tools/gitlab/test.yml | awk '{print $2}')"
 curl -o usr/local/share/wine/mono/wine-mono-$MONO_VER-x86.msi       https://dl.winehq.org/wine/wine-mono/$MONO_VER/wine-mono-$MONO_VER-x86.msi
+
+cp build/config.log usr/local/share/wine/

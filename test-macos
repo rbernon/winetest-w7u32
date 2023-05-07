@@ -7,6 +7,12 @@ ARCH=$2
 TEST=$3
 EVENT=$4
 
+# do not submit these tests
+case $TEST in
+  opengl) EVENT=push;;
+  vulkan) EVENT=push;;
+esac
+
 case $ARCH in
   win32) WINETEST=$WDIR/local/lib/wine/i386-windows/winetest.exe; WINE=wine;;
   win64) WINETEST=$WDIR/local/lib/wine/x86_64-windows/winetest.exe; WINE=wine;;

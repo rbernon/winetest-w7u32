@@ -1,0 +1,25 @@
+From 09c194655f43da2629b74653a8b8ac475d968b6b Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?R=C3=A9mi=20Bernon?= <rbernon@codeweavers.com>
+Date: Sat, 13 May 2023 00:12:01 +0200
+Subject: [PATCH] server: Avoid crashing when creating a new thread in a
+ terminated process.
+
+---
+ server/request.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/server/request.c b/server/request.c
+index 7021741c765..9840f82710c 100644
+--- a/server/request.c
++++ b/server/request.c
+@@ -495,6 +495,7 @@ int send_client_fd( struct process *process, int fd, obj_handle_t handle )
+     if (debug_level)
+         fprintf( stderr, "%04x: *fd* %04x -> %d\n", current ? current->id : process->id, handle, fd );
+ 
++    if (!process->msg_fd) return -1;
+     ret = sendmsg( get_unix_fd( process->msg_fd ), &msghdr, 0 );
+ 
+     if (ret == sizeof(handle)) return 0;
+-- 
+2.39.2
+

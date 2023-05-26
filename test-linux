@@ -19,8 +19,9 @@ case $TEST in
 esac
 
 case $ARCH in
-  win32) WINETEST=$WDIR/local/lib/wine/i386-windows/winetest.exe; WINE=wine;;
-  win64) WINETEST=$WDIR/local/lib/wine/x86_64-windows/winetest.exe; WINE=wine;;
+  win32) WINETEST=$WDIR/local/lib/wine/i386-windows/winetest.exe;;
+  wow64) WINETEST=$WDIR/local/lib/wine/i386-windows/winetest.exe; WINEARCH=win64;;
+  win64) WINETEST=$WDIR/local/lib/wine/x86_64-windows/winetest.exe;;
 esac
 
 export DISPLAY=:0
@@ -28,7 +29,8 @@ export LC_ALL=C.UTF-8
 export PATH="$WDIR/local/bin:$PATH"
 export XDG_RUNTIME_DIR=$(mkdir -p $HOME/.run && chmod 700 $HOME/.run && echo $HOME/.run)
 
-export WINEARCH=$ARCH
+export WINE=wine
+export WINEARCH=${WINEARCH:-$ARCH}
 export WINEPREFIX=$HOME/$ARCH
 export WINEDEBUG=err-all,fixme-all
 

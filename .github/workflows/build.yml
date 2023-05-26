@@ -47,12 +47,24 @@ jobs:
       matrix:
         arch: [win32, win64]
         test: [nulldrv, desktop, fvwm, openbox, kwin, mutter, wayland, vulkan]
+        include:
+          - arch: wow64
+            test: fvwm
+          - arch: wow64
+            test: vulkan
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Download
+        if: ${{ matrix.arch == 'wow64' }}
+        uses: actions/download-artifact@v3
+        with:
+          name: build-linux-win64
+
+      - name: Download
+        if: ${{ matrix.arch != 'wow64' }}
         uses: actions/download-artifact@v3
         with:
           name: build-linux-${{ matrix.arch }}
@@ -105,6 +117,9 @@ jobs:
       matrix:
         arch: [win64]
         test: [opengl, vulkan]
+        include:
+          - arch: wow64
+            test: opengl
 
     steps:
       - name: Checkout
@@ -113,7 +128,7 @@ jobs:
       - name: Download
         uses: actions/download-artifact@v3
         with:
-          name: build-macos-${{ matrix.arch }}
+          name: build-macos-win64
 
       - name: Test
         run: |

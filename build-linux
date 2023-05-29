@@ -15,6 +15,7 @@ export CCACHE_COMPILERCHECK="none"
 export CCACHE_COMPRESS="1"
 export CCACHE_COMPRESSLEVEL="10"
 export CCACHE_DIR="$PWD/.ccache"
+export CCACHE_MAXSIZE=1G
 
 git clone https://gitlab.winehq.org/wine/wine.git
 

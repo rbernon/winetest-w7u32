@@ -25,6 +25,7 @@ export CCACHE_COMPILERCHECK="none"
 export CCACHE_COMPRESS="1"
 export CCACHE_COMPRESSLEVEL="10"
 export CCACHE_DIR="$PWD/.ccache"
+export CCACHE_MAXSIZE=1G
 
 export CC="ccache gcc"
 export i386_CC="ccache i686-w64-mingw32-gcc"

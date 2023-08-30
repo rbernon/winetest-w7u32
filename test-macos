@@ -7,6 +7,13 @@ ARCH=$2
 TEST=$3
 EVENT=$4
 
+brew install \
+  freetype \
+  molten-vk \
+  gstreamer \
+  sdl2 \
+  krb5 \
+
 case $ARCH in
   win32) WINETEST=$WDIR/local/lib/wine/i386-windows/winetest.exe;;
   wow64) WINETEST=$WDIR/local/lib/wine/i386-windows/winetest.exe; WINEARCH=win64;;

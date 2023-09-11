@@ -8,11 +8,14 @@ TEST=$3
 EVENT=$4
 
 brew install \
+  cups \
+  dbus \
   freetype \
-  molten-vk \
+  gphoto2 \
   gstreamer \
-  sdl2 \
   krb5 \
+  molten-vk \
+  sdl2 \
 
 case $ARCH in
   win32) WINETEST=$WDIR/local/lib/wine/i386-windows/winetest.exe;;

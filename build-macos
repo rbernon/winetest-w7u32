@@ -10,12 +10,15 @@ esac
 brew install \
   bison \
   ccache \
+  cups \
+  dbus \
   freetype \
+  gphoto2 \
+  gstreamer \
+  krb5 \
   mingw-w64 \
   molten-vk \
-  gstreamer \
   sdl2 \
-  krb5 \
 
 export MAKE="make -s -j8"
 export PATH="/usr/local/opt/ccache/bin/:/usr/local/opt/bison/bin/:/usr/local/opt/mingw-w64/bin/:$PATH"

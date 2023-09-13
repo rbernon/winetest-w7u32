@@ -25,6 +25,7 @@ esac
 
 export LC_ALL=C.UTF-8
 export PATH="$WDIR/local/bin:$PATH"
+export DYLD_LIBRARY_PATH="$(find /usr/local/Cellar/krb5 -name 'pkgconfig' -type d | grep lib/pkgconfig | sed s:/lib/pkgconfig:/lib: | tr '\n' ':' | sed s/.$//)"
 
 export WINE=wine
 export WINEARCH=${WINEARCH:-$ARCH}

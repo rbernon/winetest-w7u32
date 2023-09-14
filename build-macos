@@ -22,7 +22,7 @@ brew install \
 
 export MAKE="make -s -j8"
 export PATH="/usr/local/opt/ccache/bin/:/usr/local/opt/bison/bin/:/usr/local/opt/mingw-w64/bin/:$PATH"
-export PKG_CONFIG_PATH="$(find /usr/local/Cellar -name 'pkgconfig' -type d | grep lib/pkgconfig | tr '\n' ':' | sed s/.$//)"
+export PKG_CONFIG_PATH="/usr/local/opt/cups/lib/pkgconfig:/usr/local/opt/krb5/lib/pkgconfig"
 
 export CCACHE_BASEDIR="$PWD/wine"
 export CCACHE_COMPILERCHECK="none"

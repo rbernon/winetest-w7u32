@@ -8,7 +8,7 @@ jobs:
   build-linux:
     runs-on: ubuntu-latest
     container:
-      image: rbernon/winehq:latest
+      image: rbernon/winehq:stable
       options: --user root
     strategy:
       matrix:
@@ -41,7 +41,7 @@ jobs:
     needs: [build-linux]
     runs-on: ubuntu-latest
     container:
-      image: rbernon/winehq:latest
+      image: rbernon/winehq:stable
       options: --user root
     strategy:
       matrix:

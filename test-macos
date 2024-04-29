@@ -41,6 +41,8 @@ INFO="$INFO]"
 case $TEST in
   opengl) DRIVER=mac; RENDERER=opengl; TEST=macos-$RENDERER;;
   vulkan) DRIVER=mac; RENDERER=vulkan; TEST=macos-$RENDERER;;
+  x86emu-opengl) DRIVER=mac; RENDERER=opengl; TEST=macos-x86emu-$RENDERER;;
+  x86emu-vulkan) DRIVER=mac; RENDERER=vulkan; TEST=macos-x86emu-$RENDERER;;
 esac
 
 $WINE reg add "HKCU\\Software\\Wine\\Drivers" /v "Graphics" /d "$DRIVER" /f

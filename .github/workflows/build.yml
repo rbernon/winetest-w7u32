@@ -141,8 +141,43 @@ jobs:
           name: test-macos-${{ matrix.test }}-${{ matrix.arch }}.report
           path: macos-*.report
 
+  test-macos-x86emu:
+    needs: [build-macos]
+    runs-on: macos-14
+    strategy:
+      matrix:
+        arch: [win64, wow64]
+        test: [x86emu-vulkan]
+        include:
+          - arch: wow64
+            test: x86emu-opengl
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Download
+        uses: actions/download-artifact@v3
+        with:
+          name: build-macos-win64
+
+      - name: Test
+        run: |
+          arch -x86_64 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+          eval "$(/usr/local/bin/brew shellenv)"
+          arch -x86_64 brew install --overwrite python
+
+          chmod +x local/bin/*
+          arch -x86_64 $PWD/test-macos $PWD ${{ matrix.arch }} ${{ matrix.test }} ${{ github.event_name }}
+
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-macos-${{ matrix.test }}-${{ matrix.arch }}.report
+          path: macos-*.report
+
   clean:
-    needs: [test-linux, test-macos]
+    needs: [test-linux, test-macos, test-macos-x86emu]
     runs-on: ubuntu-latest
     steps:
       - name: Cleanup

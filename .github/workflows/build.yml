@@ -82,7 +82,7 @@ jobs:
           path: /home/github/*.report
 
   build-macos:
-    runs-on: macos-latest
+    runs-on: macos-13
     strategy:
       matrix:
         arch: [win64]
@@ -112,7 +112,7 @@ jobs:
 
   test-macos:
     needs: [build-macos]
-    runs-on: macos-latest
+    runs-on: macos-13
     strategy:
       matrix:
         arch: [win64]

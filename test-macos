@@ -25,7 +25,7 @@ esac
 
 export LC_ALL=C.UTF-8
 export PATH="$WDIR/local/bin:$PATH"
-export DYLD_LIBRARY_PATH="/usr/local/opt/cups/lib:/usr/local/opt/krb5/lib"
+export DYLD_LIBRARY_PATH="/usr/local/lib:/usr/local/opt/cups/lib:/usr/local/opt/krb5/lib"
 
 export WINE=wine
 export WINEARCH=${WINEARCH:-$ARCH}

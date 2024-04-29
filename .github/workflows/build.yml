@@ -16,10 +16,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: .ccache
           key:
@@ -32,7 +32,7 @@ jobs:
           $PWD/build-linux ${{ matrix.arch }}
 
       - name: Upload
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build-linux-${{ matrix.arch }}
           path: usr
@@ -55,17 +55,17 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Download
         if: ${{ matrix.arch == 'wow64' }}
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build-linux-win64
 
       - name: Download
         if: ${{ matrix.arch != 'wow64' }}
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build-linux-${{ matrix.arch }}
 
@@ -76,7 +76,7 @@ jobs:
           su - github $PWD/test-linux $PWD ${{ matrix.arch }} ${{ matrix.test }} ${{ github.event_name }}
 
       - name: Upload
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-linux-${{ matrix.test }}-${{ matrix.arch }}.report
           path: /home/github/*.report
@@ -89,10 +89,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Cache
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: .ccache
           key:
@@ -105,7 +105,7 @@ jobs:
           $PWD/build-macos ${{ matrix.arch }}
 
       - name: Upload
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: build-macos-${{ matrix.arch }}
           path: usr
@@ -123,10 +123,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Download
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build-macos-win64
 
@@ -136,7 +136,7 @@ jobs:
           $PWD/test-macos $PWD ${{ matrix.arch }} ${{ matrix.test }} ${{ github.event_name }}
 
       - name: Upload
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-macos-${{ matrix.test }}-${{ matrix.arch }}.report
           path: macos-*.report
@@ -154,10 +154,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Download
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: build-macos-win64
 
@@ -171,7 +171,7 @@ jobs:
           arch -x86_64 $PWD/test-macos $PWD ${{ matrix.arch }} ${{ matrix.test }} ${{ github.event_name }}
 
       - name: Upload
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-macos-${{ matrix.test }}-${{ matrix.arch }}.report
           path: macos-*.report

@@ -141,16 +141,16 @@ jobs:
           name: test-macos-${{ matrix.test }}-${{ matrix.arch }}.report
           path: macos-*.report
 
-  test-macos-x86emu:
+  test-macos-m1ros2:
     needs: [build-macos]
     runs-on: macos-14
     strategy:
       matrix:
         arch: [win64, wow64]
-        test: [x86emu-vulkan]
+        test: [m1ros2-vulkan]
         include:
           - arch: wow64
-            test: x86emu-opengl
+            test: m1ros2-opengl
 
     steps:
       - name: Checkout
@@ -174,10 +174,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: test-macos-${{ matrix.test }}-${{ matrix.arch }}.report
-          path: macos-*.report
+          path: m1ros2-*.report
 
   clean:
-    needs: [test-linux, test-macos, test-macos-x86emu]
+    needs: [test-linux, test-macos, test-macos-m1ros2]
     runs-on: ubuntu-latest
     steps:
       - name: Cleanup

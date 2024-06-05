@@ -34,7 +34,7 @@ export WINEDEBUG=err-all,fixme-all
 
 INFO="$(sw_vers|cut -d: -f2-|xargs echo) / $(uname -a), "
 INFO="$INFO[CPU:$(sysctl -a|grep core_count|cut -d: -f2-|xargs echo)*$(sysctl -a|grep brand_string|cut -d: -f2-|xargs echo)"
-INFO="$INFO RAM:$(sysctl -a|grep hw.memsize|cut -d: -f2-|xargs -I{} echo {}/1024/1024|bc)MiB"
+INFO="$INFO RAM:$(sysctl -a|grep hw.memsize|head -n1|cut -d: -f2-|xargs -I{} echo {}/1024/1024|bc)MiB"
 INFO="$INFO GPU:$(system_profiler SPDisplaysDataType|grep -e Model: -e VRAM -e Resolution:|cut -d: -f2-|xargs echo)"
 INFO="$INFO]"
 

@@ -17,6 +17,11 @@ brew install \
   molten-vk \
   sdl2 \
 
+# workaround microphone access permissions
+sqlite3 "$HOME/Library/Application Support/com.apple.TCC/TCC.db" \
+  "INSERT OR IGNORE INTO access VALUES ('kTCCServiceMicrophone','/usr/local/opt/runner/provisioner/provisioner',1,2,4,1,NULL,NULL,0,'UNUSED',NULL,0,1687786159,NULL,NULL,'UNUSED',1687786159);" \
+  ||:
+
 case $ARCH in
   win32) WINETEST=$WDIR/local/lib/wine/i386-windows/winetest.exe;;
   wow64) WINETEST=$WDIR/local/lib/wine/i386-windows/winetest.exe; WINEARCH=win64;;

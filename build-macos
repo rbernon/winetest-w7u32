@@ -7,7 +7,7 @@ case $1 in
     win32) export CONFIGURE_ARGS="";;
 esac
 
-brew install --overwrite python
+brew install --overwrite python@3.12
 brew install \
   bison \
   ccache \

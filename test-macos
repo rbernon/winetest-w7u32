@@ -7,7 +7,7 @@ ARCH=$2
 TEST=$3
 EVENT=$4
 
-brew install --overwrite python
+brew install --overwrite python@3.12
 brew install \
   cups \
   dbus \

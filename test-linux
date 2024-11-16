@@ -121,7 +121,7 @@ $WINE reg add "HKCU\\Software\\Wine\\Drivers" /v "Graphics" /d "$DRIVER" /f
 $WINE reg add "HKCU\\Software\\Wine\\Direct3D" /v "Renderer" /d "$RENDERER" /f
 $WINE reg add "HKCU\\Software\\Wine\\WineDbg" /v "ShowCrashDialog" /t REG_DWORD /d 0 /f
 $WINE reg add "HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AeDebug" /v "Auto" /t REG_DWORD /d 1 /f
-wineserver -w
+wineserver -kw
 
 timeout --preserve-status -k10s -sINT 1h \
 $WINE $WINETEST -q -o $TEST-$ARCH.report -t rbernon-$TEST-$ARCH -i "$INFO" \

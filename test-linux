@@ -123,6 +123,7 @@ $WINE reg add "HKCU\\Software\\Wine\\WineDbg" /v "ShowCrashDialog" /t REG_DWORD 
 $WINE reg add "HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AeDebug" /v "Auto" /t REG_DWORD /d 1 /f
 wineserver -w
 
+timeout --preserve-status -k10s -sINT 1h \
 $WINE $WINETEST -q -o $TEST-$ARCH.report -t rbernon-$TEST-$ARCH -i "$INFO" \
   -m "Rémi Bernon <rbernon@codeweavers.com>" ||:
 

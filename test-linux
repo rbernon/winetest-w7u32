@@ -94,7 +94,7 @@ case $TEST in
   openbox)  DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;
   xfwm4)    DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;
   xmonad)   DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;
-  desktop)  DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST; $WINE reg add "HKCU\\Software\\Wine\\Explorer\\Desktops" /v "Default" /d "800x600" /f;;
+  desktop)  DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;
   nulldrv)  DRIVER=null; RENDERER=gl;;
   wayland)  DRIVER=wayland; RENDERER=gl; TEST=$DRIVER;;
   vulkan)   DRIVER=x11; RENDERER=vulkan; TEST=$RENDERER;;
@@ -121,6 +121,9 @@ $WINE reg add "HKCU\\Software\\Wine\\Drivers" /v "Graphics" /d "$DRIVER" /f
 $WINE reg add "HKCU\\Software\\Wine\\Direct3D" /v "Renderer" /d "$RENDERER" /f
 $WINE reg add "HKCU\\Software\\Wine\\WineDbg" /v "ShowCrashDialog" /t REG_DWORD /d 0 /f
 $WINE reg add "HKLM\\Software\\Microsoft\\Windows NT\\CurrentVersion\\AeDebug" /v "Auto" /t REG_DWORD /d 1 /f
+case $TEST in
+  *-desktop) $WINE reg add "HKCU\\Software\\Wine\\Explorer\\Desktops" /v "Default" /d "800x600" /f;;
+esac
 wineserver -kw
 
 $WINE $WINETEST -q -o $TEST-$ARCH.report -t rbernon-$TEST-$ARCH -i "$INFO" \

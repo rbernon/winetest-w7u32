@@ -103,8 +103,8 @@ esac
 case $DRIVER in
   x11)
     env -C $HOME startx -- -config xorg.conf $DISPLAY & sleep 1
-    xrandr --addmode default 1024x768
-    xrandr --output default --mode 1024x768
+    xrandr --addmode DUMMY0 1024x768
+    xrandr --output DUMMY0 --mode 1024x768
     xrandr
     ;;
   wayland)

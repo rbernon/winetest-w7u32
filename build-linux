@@ -18,6 +18,7 @@ export CCACHE_DIR="$PWD/.ccache"
 export CCACHE_MAXSIZE=1G
 
 git clone https://gitlab.winehq.org/wine/wine.git
+git -C wine apply $PWD/patches/*.patch
 
 rm build -rf; mkdir -p build
 env -C build ../wine/configure -q CROSSDEBUG=split --with-mingw $CONFIGURE_ARGS

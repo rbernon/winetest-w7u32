@@ -37,10 +37,7 @@ export i386_CC="ccache i686-w64-mingw32-gcc"
 export x86_64_CC="ccache x86_64-w64-mingw32-gcc"
 
 git clone https://gitlab.winehq.org/wine/wine.git
-
-cd wine
-git apply ../*.patch
-cd ..
+git -C wine apply $PWD/patches/*.patch
 
 rm -rf build; mkdir -p build
 cd build

@@ -1,0 +1,38 @@
+From f28cae07ae010bfdc8339410886ca3141916faa0 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?R=C3=A9mi=20Bernon?= <rbernon@codeweavers.com>
+Date: Fri, 14 Feb 2025 13:31:12 +0100
+Subject: [PATCH] _NSGetExecutablePath
+
+---
+ tools/tools.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/tools/tools.h b/tools/tools.h
+index b840a85b2e53..2feeb0d753d5 100644
+--- a/tools/tools.h
++++ b/tools/tools.h
+@@ -39,6 +39,10 @@
+ #ifdef HAVE_SYS_SYSCTL_H
+ # include <sys/sysctl.h>
+ #endif
++#ifdef __APPLE__
++# include <mach-o/dyld.h>
++# undef TOOL_LD
++#endif
+ 
+ #ifdef _WIN32
+ # include <direct.h>
+@@ -705,6 +709,10 @@ static inline char *get_bindir( const char *argv0 )
+     if (!sysctl( pathname, ARRAY_SIZE(pathname), path, &path_size, NULL, 0 ))
+         dir = realpath( path, NULL );
+     free( path );
++#elif defined(__APPLE__)
++    char buffer[1024];
++    uint32_t size = sizeof(buffer);
++    if (!_NSGetExecutablePath( buffer, &size )) dir = buffer;
+ #endif
+     if (!dir && !(dir = realpath( argv0, NULL ))) return NULL;
+     return get_dirname( dir );
+-- 
+2.45.2
+

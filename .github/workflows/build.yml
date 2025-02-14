@@ -71,7 +71,7 @@ jobs:
 
       - name: Test
         run: |
-          chmod +x local/bin/*
+          chmod +x local/bin/* local/lib/wine/*-unix/wine*
           useradd github && mkdir -p /home/github /home/github/Documents /home/github/Desktop && chown github:github -R /home/github
           su - github $PWD/test-linux $PWD ${{ matrix.arch }} ${{ matrix.test }} ${{ github.event_name }}
 
@@ -132,7 +132,7 @@ jobs:
 
       - name: Test
         run: |
-          chmod +x local/bin/*
+          chmod +x local/bin/* local/lib/wine/*-unix/wine*
           $PWD/test-macos $PWD ${{ matrix.arch }} ${{ matrix.test }} ${{ github.event_name }}
 
       - name: Upload
@@ -167,7 +167,7 @@ jobs:
           eval "$(/usr/local/bin/brew shellenv)"
           arch -x86_64 brew install --overwrite python
 
-          chmod +x local/bin/*
+          chmod +x local/bin/* local/lib/wine/*-unix/wine*
           arch -x86_64 $PWD/test-macos $PWD ${{ matrix.arch }} ${{ matrix.test }} ${{ github.event_name }}
 
       - name: Upload

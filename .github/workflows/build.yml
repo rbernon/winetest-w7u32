@@ -46,7 +46,7 @@ jobs:
     strategy:
       matrix:
         arch: [win32, win64]
-        test: [nulldrv, desktop, fvwm, openbox, kwin, mutter, wayland, vulkan]
+        test: [nulldrv, desktop, fvwm, openbox, kwin, mutter, modeset, wayland, vulkan]
         include:
           - arch: wow64
             test: fvwm

@@ -43,6 +43,7 @@ echo 'EndSection' >> $HOME/xorg.conf
 
 case $TEST in
   fvwm)     echo "exec /usr/bin/fvwm -f config -c \"Style * MwmDecor\" -c \"Style * UsePPosition\" 2>/dev/null" >$HOME/.xinitrc;;
+  modeset)  echo "exec /usr/bin/fvwm -f config -c \"Style * MwmDecor\" -c \"Style * UsePPosition\" 2>/dev/null" >$HOME/.xinitrc;;
   i3)       echo "exec /usr/bin/i3 2>/dev/null" >$HOME/.xinitrc;;
   kwin)     echo "exec /usr/bin/kwin_x11 2>/dev/null" >$HOME/.xinitrc;;
   lwm)      echo "exec /usr/bin/lwm 2>/dev/null" >$HOME/.xinitrc;;
@@ -65,6 +66,7 @@ INFO="$INFO[CPU:$(nproc)*$(lscpu|grep "Model name:"|cut -d: -f2-|xargs echo)"
 INFO="$INFO RAM:$(grep "MemTotal:" /proc/meminfo|cut -d: -f2-|tr -d ' ') display:dummy"
 case $TEST in
   fvwm)     INFO="$INFO $(/usr/bin/fvwm --version|head -1)";;
+  modeset)  INFO="$INFO with emulated modesetting";;
   i3)       INFO="$INFO $(/usr/bin/i3 --version|head -1)";;
   kwin)     INFO="$INFO $(/usr/bin/kwin_x11 --version|head -1)";;
   lwm)      INFO="$INFO $(/usr/bin/lwm --version|head -1)";;
@@ -84,6 +86,9 @@ INFO="$INFO]"
 
 case $TEST in
   fvwm)     DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;
+  modeset)
+    $WINE reg add "HKCU\\Software\\Wine\\X11 Driver" /v "EmulateModeset" /d "Y" /f
+    DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;
   i3)       DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;
   kwin)     DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;
   lwm)      DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;

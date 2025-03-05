@@ -90,7 +90,9 @@ case $TEST in
   marco)    DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;
   metacity) DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;
   muffin)   DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;
-  mutter)   DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;
+  mutter)
+    $WINE reg add "HKCU\\Software\\Wine\\X11 Driver" /v "Decorated" /d "N" /f
+    DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;
   openbox)  DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;
   xfwm4)    DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;
   xmonad)   DRIVER=x11; RENDERER=gl;  TEST=$DRIVER-$TEST;;

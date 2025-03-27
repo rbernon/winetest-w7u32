@@ -17,7 +17,7 @@ export CCACHE_COMPRESSLEVEL="10"
 export CCACHE_DIR="$PWD/.ccache"
 export CCACHE_MAXSIZE=1G
 
-git clone https://gitlab.winehq.org/wine/wine.git
+[ ! -d "wine" ] && git clone https://gitlab.winehq.org/wine/wine.git || (git -C wine reset --hard && git -C wine pull origin master)
 git -C wine apply $PWD/patches/*.patch
 
 rm build -rf; mkdir -p build

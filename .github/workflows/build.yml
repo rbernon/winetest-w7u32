@@ -21,7 +21,9 @@ jobs:
       - name: Cache
         uses: actions/cache@v4
         with:
-          path: .ccache
+          path: |
+            .ccache
+            wine
           key:
             cache-linux-${{ matrix.arch }}-${{ github.run_id }}
           restore-keys: |
@@ -133,7 +135,9 @@ jobs:
       - name: Cache
         uses: actions/cache@v4
         with:
-          path: .ccache
+          path: |
+            .ccache
+            wine
           key:
             cache-macos-${{ matrix.arch }}-${{ github.run_id }}
           restore-keys: |

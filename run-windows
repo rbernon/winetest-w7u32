@@ -1,0 +1,26 @@
+#!/bin/bash
+
+set -Eeux
+
+VERSION=$1
+RUN_ID=$2
+EVENT=$3
+
+case $VERSION in
+  w7u32)      INSTALL="rbernon/private:win7u-i386-en";;
+  w7e64)      INSTALL="7e";;
+  w81p32)     INSTALL="rbernon/private:win81-i386-en";;
+  w81e64)     INSTALL="8e";;
+  w10pro64)   INSTALL="10";;
+  w10ltsc64)  INSTALL="10l";;
+  w11pro64)   INSTALL="11";;
+  w11ltsc64)  INSTALL="11l";;
+esac
+
+case $VERSION in
+  *32) ARCHS="[\"win32\"]";;
+  *64) ARCHS="[\"wow64\",\"win64\"]";;
+esac
+
+gh workflow run windows -R rbernon/winetest-$VERSION -f run_id=$RUN_ID -f event=$EVENT \
+   -f version=$VERSION -f install=$INSTALL -f "archs=$ARCHS"

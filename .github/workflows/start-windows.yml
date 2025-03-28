@@ -1,0 +1,36 @@
+name: start-windows
+on:
+  workflow_call:
+    inputs:
+      event:
+        type: string
+        default: "push"
+      run_id:
+        type: string
+        default: ""
+    secrets:
+      GH_TOKEN:
+        required: true
+
+jobs:
+  test-windows:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        version: [w7u32, w7e64, w81p32, w81e64, w10pro64, w10ltsc64, w11pro64, w11ltsc64]
+    env:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Update
+        run: |
+          git fetch --unshallow
+          git config --unset-all http.https://github.com/.extraheader
+          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/rbernon/winetest-${{ matrix.version }} main --force
+
+      - name: Trigger
+        run: |
+          $PWD/run-windows ${{ matrix.version }} ${{ inputs.run_id }} ${{ inputs.event }}

@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unattend xmlns="urn:schemas-microsoft-com:unattend" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State">
+  <settings pass="windowsPE">
+    <component name="Microsoft-Windows-International-Core-WinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+      <InputLocale>0409:00000409</InputLocale>
+      <SetupUILanguage>
+        <UILanguage>en-US</UILanguage>
+      </SetupUILanguage>
+      <SystemLocale>en-US</SystemLocale>
+      <UILanguage>en-US</UILanguage>
+      <UserLocale>en-US</UserLocale>
+    </component>
+    <component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+      <DiskConfiguration>
+        <Disk wcm:action="add">
+          <DiskID>0</DiskID>
+          <WillWipeDisk>true</WillWipeDisk>
+          <!--GPT
+          <CreatePartitions>
+            <CreatePartition wcm:action="add"><Order>1</Order><Type>EFI</Type><Size>128</Size></CreatePartition>
+            <CreatePartition wcm:action="add"><Order>2</Order><Type>MSR</Type><Size>128</Size></CreatePartition>
+            <CreatePartition wcm:action="add"><Order>3</Order><Type>Primary</Type><Extend>true</Extend></CreatePartition>
+          </CreatePartitions>
+          <ModifyPartitions>
+            <ModifyPartition wcm:action="add"><Order>1</Order><PartitionID>1</PartitionID><Label>System</Label><Format>FAT32</Format></ModifyPartition>
+            <ModifyPartition wcm:action="add"><Order>2</Order><PartitionID>2</PartitionID></ModifyPartition>
+            <ModifyPartition wcm:action="add"><Order>3</Order><PartitionID>3</PartitionID><Label>Windows</Label><Letter>C</Letter><Format>NTFS</Format></ModifyPartition>
+          </ModifyPartitions>
+          GPT-->
+          <!--MBR
+          <CreatePartitions>
+            <CreatePartition wcm:action="add"><Order>1</Order><Type>Primary</Type><Size>100</Size></CreatePartition>
+            <CreatePartition wcm:action="add"><Order>2</Order><Type>Primary</Type><Size>100</Size></CreatePartition>
+            <CreatePartition wcm:action="add"><Order>3</Order><Type>Primary</Type><Extend>true</Extend></CreatePartition>
+          </CreatePartitions>
+          <ModifyPartitions>
+            <ModifyPartition wcm:action="add"><Order>1</Order><PartitionID>1</PartitionID><Active>true</Active><Format>NTFS</Format><Label>System Reserved</Label><TypeID>0x27</TypeID></ModifyPartition>
+            <ModifyPartition wcm:action="add"><Order>2</Order><PartitionID>2</PartitionID><Active>true</Active><Format>NTFS</Format><Label>System Hidden</Label><TypeID>0x27</TypeID></ModifyPartition>
+            <ModifyPartition wcm:action="add"><Order>3</Order><PartitionID>3</PartitionID><Active>true</Active><Format>NTFS</Format><Label>Windows</Label><Letter>C</Letter></ModifyPartition>
+          </ModifyPartitions>
+          MBR-->
+        </Disk>
+      </DiskConfiguration>
+      <ImageInstall>
+        <OSImage>
+          <InstallFrom><MetaData wcm:action="add"><Key>/IMAGE/NAME</Key><Value>Windows 8.1 Pro</Value></MetaData></InstallFrom>
+          <InstallTo><DiskID>0</DiskID><PartitionID>3</PartitionID></InstallTo>
+          <InstallToAvailablePartition>false</InstallToAvailablePartition>
+        </OSImage>
+      </ImageInstall>
+      <DynamicUpdate><Enable>true</Enable></DynamicUpdate>
+      <UpgradeData><Upgrade>false</Upgrade></UpgradeData>
+      <UserData>
+        <AcceptEula>true</AcceptEula>
+        <FullName>User</FullName>
+        <Organization>Company</Organization>
+        <!-- Windows 7 ULTIMATE: <ProductKey><Key>D4F6K-QK3RD-TMVMJ-BBMRX-3MBMV</Key></ProductKey> -->
+        <!-- Windows 7 ENTERPRISE: <ProductKey><Key>33PXH-7Y6KF-2VJC9-XBBR8-HVTHH</Key></ProductKey> -->
+
+        <!-- Windows 8.1 Pro: <ProductKey><Key>GCRJD-8NW9H-F2CDX-CCM8D-9D6T9</Key></ProductKey> -->
+        <!-- Windows 8.1 Enterprise: <ProductKey><Key>MHF9N-XY6XB-WVXMC-BTDCT-MKKG7</Key></ProductKey> -->
+
+        <!-- Windows 10 Pro: <ProductKey><Key>W269N-WFGWX-YVC9B-4J6C9-T83GX</Key></ProductKey> -->
+        <!-- Windows 10 Enterprise: <ProductKey><Key>NPPR9-FWDCX-D2C8J-H872K-2YT43</Key></ProductKey> -->
+        <!-- Windows 10 Enterprise LTSB 2015: <ProductKey><Key>WNMTR-4C88C-JK8YV-HQ7T2-76DF9</Key></ProductKey> -->
+        <!-- Windows 10 Enterprise LTSB 2016: <ProductKey><Key>DCPHK-NFMTC-H88MJ-PFHPY-QJ4BJ</Key></ProductKey> -->
+        <!-- Windows 10 Enterprise LTSC 2019: <ProductKey><Key>M7XTQ-FN8P6-TTKYV-9D4CC-J462D</Key></ProductKey> -->
+        <!-- Windows 10 Enterprise LTSC 2021: <ProductKey><Key>M7XTQ-FN8P6-TTKYV-9D4CC-J462D</Key></ProductKey> -->
+
+        <!-- Windows 11 Pro: <ProductKey><Key>W269N-WFGWX-YVC9B-4J6C9-T83GX</Key></ProductKey> -->
+        <!-- Windows 11 Enterprise: <ProductKey><Key>NPPR9-FWDCX-D2C8J-H872K-2YT43</Key></ProductKey> -->
+        <!-- Windows 11 Enterprise LTSC 2024: <ProductKey><Key>M7XTQ-FN8P6-TTKYV-9D4CC-J462D</Key></ProductKey> -->
+      </UserData>
+      <EnableFirewall>false</EnableFirewall>
+      <Diagnostics><OptIn>false</OptIn></Diagnostics>
+      <RunSynchronous>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\System\Setup\LabConfig" /v BypassTPMCheck /t REG_DWORD /d 1 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\System\Setup\LabConfig" /v BypassSecureBootCheck /t REG_DWORD /d 1 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\System\Setup\LabConfig" /v BypassRAMCheck /t REG_DWORD /d 1 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\System\Setup\MoSetup" /v AllowUpgradesWithUnsupportedTPMOrCPU /t REG_DWORD /d 1 /f</Path></RunSynchronousCommand>
+      </RunSynchronous>
+    </component>
+  </settings>
+  <settings pass="offlineServicing" />
+  <settings pass="generalize">
+    <component name="Microsoft-Windows-PnPSysprep" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+      <PersistAllDeviceInstalls>true</PersistAllDeviceInstalls>
+    </component>
+    <component name="Microsoft-Windows-Security-SPP" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+      <SkipRearm>1</SkipRearm>
+    </component>
+  </settings>
+  <settings pass="specialize">
+    <component name="Microsoft-Windows-Security-SPP-UX" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+      <SkipAutoActivation>true</SkipAutoActivation>
+    </component>
+    <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+      <ComputerName>*</ComputerName>
+    </component>
+    <component name="Microsoft-Windows-ErrorReportingCore" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+      <DisableWER>1</DisableWER>
+    </component>
+    <component name="Microsoft-Windows-IE-InternetExplorer" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+      <DisableAccelerators>true</DisableAccelerators>
+      <DisableFirstRunWizard>true</DisableFirstRunWizard>
+      <Home_Page>https://google.com</Home_Page>
+      <Help_Page>about:blank</Help_Page>
+    </component>
+    <component name="Microsoft-Windows-IE-InternetExplorer" processorArchitecture="wow64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+      <DisableAccelerators>true</DisableAccelerators>
+      <DisableFirstRunWizard>true</DisableFirstRunWizard>
+      <Home_Page>https://google.com</Home_Page>
+      <Help_Page>about:blank</Help_Page>
+    </component>
+    <component name="Microsoft-Windows-SQMApi" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+      <CEIPEnabled>0</CEIPEnabled>
+    </component>
+    <component name="Microsoft-Windows-SystemRestore-Main" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+      <DisableSR>1</DisableSR>
+    </component>
+    <component name="Microsoft-Windows-International-Core" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+      <InputLocale>0409:00000409</InputLocale>
+      <SystemLocale>en-US</SystemLocale>
+      <UILanguage>en-US</UILanguage>
+      <UserLocale>en-US</UserLocale>
+    </component>
+    <component name="Microsoft-Windows-Deployment" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+      <RunSynchronous>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>pnputil -i -a C:\Windows\Drivers\viogpudo\viogpudo.inf</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>bcdedit -set testsigning on</Path></RunSynchronousCommand>
+
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>powercfg /hibernate off</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>powercfg /change monitor-timeout-ac 0</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>powercfg /change standby-timeout-ac 0</Path></RunSynchronousCommand>
+
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>cmd /C echo 20.20.20.1     host.lan >> %WINDIR%\system32\drivers\etc\hosts</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>netsh advfirewall firewall set rule group="@FirewallAPI.dll,-32752" new enable=Yes</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>netsh advfirewall firewall set rule group="@FirewallAPI.dll,-28502" new enable=Yes</Path></RunSynchronousCommand>
+
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" /v "AllowInsecureGuestAuth" /t REG_DWORD /d 1 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters" /v "RequireSecuritySignature" /t REG_DWORD /d 0 /f</Path></RunSynchronousCommand>
+
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\OOBE" /v BypassNRO /t REG_DWORD /d 1 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\Software\Policies\Microsoft\Windows\CloudContent" /v "DisableCloudOptimizedContent" /t REG_DWORD /d 1 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\Software\Policies\Microsoft\Windows\CloudContent" /v "DisableWindowsConsumerFeatures" /t REG_DWORD /d 1 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\Software\Policies\Microsoft\Windows\CloudContent" /v "DisableConsumerAccountStateContent" /t REG_DWORD /d 1 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\Software\Policies\Microsoft\Windows NT\CurrentVersion\NetworkList\Signatures\FirstNetwork" /v Category /t REG_DWORD /d 1 /f</Path></RunSynchronousCommand>
+
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v "EnableLUA" /t REG_DWORD /d 1 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v "ConsentPromptBehaviorAdmin" /t REG_DWORD /d 0 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\System" /v "PromptOnSecureDesktop" /t REG_DWORD /d 0 /f</Path></RunSynchronousCommand>
+
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\Software\Microsoft\Windows NT\CurrentVersion\AeDebug" /v "Auto" /t REG_DWORD /d 1 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\System\CurrentControlSet\Control\Network\NewNetworkWindowOff" /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\System\CurrentControlSet\Control\Network\NetworkLocationWizard" /v HideWizard /t REG_DWORD /d 1 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\Associations" /v DefaultFileTypeRisk /t REG_DWORD /d "1808" /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\Associations" /v LowRiskFileTypes /d ".exe;.bat" /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\Software\Microsoft\Windows\CurrentVersion\Policies\Attachments" /v SaveZoneInformation /t REG_DWORD /d "1" /f</Path></RunSynchronousCommand>
+
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg delete "HKLM\Software\Policies\Microsoft\Windows Defender" /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\Software\Policies\Microsoft\Windows Defender" /v "DisableAntiSpyware" /t REG_DWORD /d "1" /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\Software\Policies\Microsoft\Windows Defender" /v "DisableAntiVirus" /t REG_DWORD /d "1" /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\Software\Policies\Microsoft\Windows Defender" /v "DisableRoutinelyTakingAction" /t REG_DWORD /d "1" /f</Path></RunSynchronousCommand>
+
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\Software\Policies\Microsoft\Edge" /v "HideFirstRunExperience" /t REG_DWORD /d 1 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\System\CurrentControlSet\Control\Power" /v "HibernateFileSizePercent" /t REG_DWORD /d 0 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\System\CurrentControlSet\Control\Power" /v "HibernateEnabled" /t REG_DWORD /d 0 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\Software\Policies\Microsoft\Windows NT\Terminal Services" /v "fAllowUnlistedRemotePrograms" /t REG_DWORD /d 1 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKLM\Software\Policies\Microsoft\Windows\WindowsUpdate\AU" /v "NoAutoUpdate" /t REG_DWORD /d 1 /f</Path></RunSynchronousCommand>
+
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg load "HKU\Default" "C:\Users\Default\NTUSER.DAT"</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKU\Default\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "ContentDeliveryAllowed" /t REG_DWORD /d 0 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKU\Default\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "FeatureManagementEnabled" /t REG_DWORD /d 0 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKU\Default\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "OEMPreInstalledAppsEnabled" /t REG_DWORD /d 0 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKU\Default\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "PreInstalledAppsEnabled" /t REG_DWORD /d 0 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKU\Default\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "PreInstalledAppsEverEnabled" /t REG_DWORD /d 0 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKU\Default\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SilentInstalledAppsEnabled" /t REG_DWORD /d 0 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKU\Default\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SoftLandingEnabled" /t REG_DWORD /d 0 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKU\Default\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContentEnabled" /t REG_DWORD /d 0 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKU\Default\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-310093Enabled" /t REG_DWORD /d 0 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKU\Default\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-338387Enabled" /t REG_DWORD /d 0 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKU\Default\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-338388Enabled" /t REG_DWORD /d 0 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKU\Default\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-338389Enabled" /t REG_DWORD /d 0 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKU\Default\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-338393Enabled" /t REG_DWORD /d 0 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKU\Default\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SubscribedContent-353698Enabled" /t REG_DWORD /d 0 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKU\Default\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v "SystemPaneSuggestionsEnabled" /t REG_DWORD /d 0 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKU\Default\Software\Policies\Microsoft\Windows\CloudContent" /v "DisableCloudOptimizedContent" /t REG_DWORD /d 1 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKU\Default\Software\Policies\Microsoft\Windows\CloudContent" /v "DisableWindowsConsumerFeatures" /t REG_DWORD /d 1 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKU\Default\Software\Policies\Microsoft\Windows\CloudContent" /v "DisableConsumerAccountStateContent" /t REG_DWORD /d 1 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKU\Default\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "HideFileExt" /t REG_DWORD /d 0 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKU\Default\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "ShowTaskViewButton" /t REG_DWORD /d 0 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKU\Default\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarDa" /t REG_DWORD /d 0 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKU\Default\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "TaskbarMn" /t REG_DWORD /d 0 /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKU\Default\Control Panel\UnsupportedHardwareNotificationCache" /v SV1 /d 0 /t REG_DWORD /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg add "HKU\Default\Control Panel\UnsupportedHardwareNotificationCache" /v SV2 /d 0 /t REG_DWORD /f</Path></RunSynchronousCommand>
+        <RunSynchronousCommand wcm:action="add"><Order>1</Order><Path>reg unload "HKU\Default"</Path></RunSynchronousCommand>
+      </RunSynchronous>
+    </component>
+  </settings>
+  <settings pass="auditSystem" />
+  <settings pass="auditUser" />
+  <settings pass="oobeSystem">
+    <component name="Microsoft-Windows-SecureStartup-FilterDriver" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+      <PreventDeviceEncryption>true</PreventDeviceEncryption>
+    </component>
+    <component name="Microsoft-Windows-EnhancedStorage-Adm" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+      <TCGSecurityActivationDisabled>1</TCGSecurityActivationDisabled>
+    </component>
+    <component name="Microsoft-Windows-Shell-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS">
+      <UserAccounts>
+        <LocalAccounts>
+          <LocalAccount wcm:action="add">
+            <Name>User</Name>
+            <Group>Administrators</Group>
+            <Password><Value>Password</Value><PlainText>true</PlainText></Password>
+          </LocalAccount>
+        </LocalAccounts>
+        <AdministratorPassword><Value>Password</Value><PlainText>true</PlainText></AdministratorPassword>
+      </UserAccounts>
+      <AutoLogon>
+        <Username>User</Username>
+        <Enabled>true</Enabled>
+        <LogonCount>65432</LogonCount>
+        <Password><Value>Password</Value><PlainText>true</PlainText></Password>
+      </AutoLogon>
+      <Display>
+        <ColorDepth>32</ColorDepth>
+        <HorizontalResolution>1920</HorizontalResolution>
+        <VerticalResolution>1080</VerticalResolution>
+      </Display>
+      <OOBE>
+        <HideEULAPage>true</HideEULAPage>
+        <HideLocalAccountScreen>true</HideLocalAccountScreen>
+        <HideOEMRegistrationScreen>true</HideOEMRegistrationScreen>
+        <HideOnlineAccountScreens>true</HideOnlineAccountScreens>
+        <HideWirelessSetupInOOBE>true</HideWirelessSetupInOOBE>
+        <NetworkLocation>Home</NetworkLocation>
+        <ProtectYourPC>3</ProtectYourPC>
+        <SkipUserOOBE>true</SkipUserOOBE>
+        <SkipMachineOOBE>true</SkipMachineOOBE>
+      </OOBE>
+      <RegisteredOrganization>Company</RegisteredOrganization>
+      <RegisteredOwner>User</RegisteredOwner>
+      <FirstLogonCommands>
+        <SynchronousCommand wcm:action="add"><Order>1</Order><CommandLine>wmic useraccount where name="User" set PasswordExpires=false</CommandLine></SynchronousCommand>
+        <SynchronousCommand wcm:action="add"><Order>1</Order><CommandLine>cmd /c copy C:\OEM\startup.bat "%ALLUSERSPROFILE%\Start Menu\Programs\Startup\startup.bat"</CommandLine></SynchronousCommand>
+      </FirstLogonCommands>
+    </component>
+  </settings>
+</unattend>

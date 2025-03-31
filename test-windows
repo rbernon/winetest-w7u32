@@ -9,14 +9,14 @@ EVENT="${3:-push}"
 . /etc/os-release
 
 case $VERSION in
-  w11pro64)  INFO="Windows 11 Pro 64bit";;
-  w11ltsc64) INFO="Windows 11 LTSC 64bit";;
-  w10pro64)  INFO="Windows 10 Pro 64bit";;
-  w10ltsc64) INFO="Windows 10 LTSC 64bit";;
-  w81e64)    INFO="Windows 8.1 Enterprise 64bit";;
-  w81p32)    INFO="Windows 8.1 Pro 32bit";;
-  w7e64)     INFO="Windows 7 Enterprise 64bit";;
-  w7u32)     INFO="Windows 7 Ultimate 32bit";;
+  w7u32)        INFO="Windows 7 Ultimate 32bit";;
+  w7e64)        INFO="Windows 7 Enterprise 64bit";;
+  w81p32)       INFO="Windows 8.1 Pro 32bit";;
+  w81e64)       INFO="Windows 8.1 Enterprise 64bit";;
+  w10pro64)     INFO="Windows 10 Pro 64bit";;
+  w10ltsc64)    INFO="Windows 10 LTSC 64bit";;
+  w11pro64)     INFO="Windows 11 Pro 64bit";;
+  w11ltsc64)    INFO="Windows 11 LTSC 64bit";;
 esac
 
 INFO="$INFO / QEMU running on $PRETTY_NAME / $(uname -a), "

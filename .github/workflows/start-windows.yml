@@ -29,7 +29,7 @@ jobs:
         run: |
           git fetch --unshallow
           git config --unset-all http.https://github.com/.extraheader
-          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/rbernon/winetest-${{ matrix.version }} main --force
+          git push https://x-access-token:${{ secrets.GH_TOKEN }}@github.com/rbernon-winetests/${{ matrix.version }} main --force
 
       - name: Trigger
         run: |

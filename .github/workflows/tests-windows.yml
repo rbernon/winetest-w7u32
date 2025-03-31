@@ -46,7 +46,7 @@ jobs:
         with:
           name: build-linux-win32
           github-token: ${{ github.token }}
-          repository: rbernon/winetest
+          repository: rbernon-winetests/winetest
           run-id: ${{ inputs.run_id }}
 
       - name: Download
@@ -55,7 +55,7 @@ jobs:
         with:
           name: build-linux-win64
           github-token: ${{ github.token }}
-          repository: rbernon/winetest
+          repository: rbernon-winetests/winetest
           run-id: ${{ inputs.run_id }}
 
       - name: Execute

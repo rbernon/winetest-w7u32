@@ -22,5 +22,5 @@ case $VERSION in
   *64) ARCHS="[\"wow64\",\"win64\"]";;
 esac
 
-gh workflow run windows -R rbernon/winetest-$VERSION -f run_id=$RUN_ID -f event=$EVENT \
+gh workflow run windows -R rbernon-winetests/$VERSION -f run_id=$RUN_ID -f event=$EVENT \
    -f version=$VERSION -f install=$INSTALL -f "archs=$ARCHS"

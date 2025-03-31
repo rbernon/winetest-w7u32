@@ -13,6 +13,8 @@ case $VERSION in
   w7e64)        INFO="Windows 7 Enterprise 64bit";;
   w81p32)       INFO="Windows 8.1 Pro 32bit";;
   w81e64)       INFO="Windows 8.1 Enterprise 64bit";;
+  w101809p32)   INFO="Windows 10.1809 Pro 32bit";;
+  w101809p64)   INFO="Windows 10.1809 Pro 64bit";;
   w10pro64)     INFO="Windows 10 Pro 64bit";;
   w10ltsc64)    INFO="Windows 10 LTSC 64bit";;
   w11pro64)     INFO="Windows 11 Pro 64bit";;

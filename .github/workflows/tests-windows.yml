@@ -18,12 +18,12 @@ on:
 jobs:
   tests:
     runs-on: ubuntu-latest
-
     container:
       image: rbernon/winetest-windows:stable
       options: --user root --device=/dev/kvm --device=/dev/net/tun --cap-add NET_ADMIN -p 8006:8006
-
+    continue-on-error: true
     strategy:
+      fail-fast: false
       matrix:
         arch: ${{ fromJson(inputs.archs) }}
 

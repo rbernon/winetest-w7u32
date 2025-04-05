@@ -15,7 +15,9 @@ on:
 jobs:
   test-windows:
     runs-on: ubuntu-latest
+    continue-on-error: true
     strategy:
+      fail-fast: false
       matrix:
         version: [w7u32, w7e64, w81p32, w81e64, w101809p32, w101809p64, w10pro64, w10ltsc64, w11pro64, w11ltsc64]
     env:

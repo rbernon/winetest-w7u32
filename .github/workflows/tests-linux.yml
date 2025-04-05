@@ -12,7 +12,9 @@ jobs:
     container:
       image: rbernon/winehq:stable
       options: --user root
+    continue-on-error: true
     strategy:
+      fail-fast: false
       matrix:
         arch: [win32, win64]
         test: [nulldrv, desktop, fvwm, openbox, kwin, mutter, modeset, wayland, vulkan]
@@ -45,6 +47,7 @@ jobs:
           su - github $PWD/test-linux $PWD ${{ matrix.arch }} ${{ matrix.test }} ${{ inputs.event }}
 
       - name: Upload
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-linux-${{ matrix.test }}-${{ matrix.arch }}.report
@@ -55,7 +58,9 @@ jobs:
     container:
       image: rbernon/winehq:trixie
       options: --user root
+    continue-on-error: true
     strategy:
+      fail-fast: false
       matrix:
         arch: [win32, win64]
         test: [trixie]
@@ -83,6 +88,7 @@ jobs:
           su - github $PWD/test-linux $PWD ${{ matrix.arch }} ${{ matrix.test }} ${{ inputs.event }}
 
       - name: Upload
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-linux-${{ matrix.test }}-${{ matrix.arch }}.report

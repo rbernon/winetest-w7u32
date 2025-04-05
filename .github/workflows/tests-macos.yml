@@ -9,7 +9,9 @@ on:
 jobs:
   test-macos:
     runs-on: macos-13
+    continue-on-error: true
     strategy:
+      fail-fast: false
       matrix:
         arch: [win64]
         test: [opengl, vulkan]
@@ -32,6 +34,7 @@ jobs:
           $PWD/test-macos $PWD ${{ matrix.arch }} ${{ matrix.test }} ${{ inputs.event }}
 
       - name: Upload
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-macos-${{ matrix.test }}-${{ matrix.arch }}.report
@@ -39,7 +42,9 @@ jobs:
 
   test-macos-m1ros2:
     runs-on: macos-14
+    continue-on-error: true
     strategy:
+      fail-fast: false
       matrix:
         arch: [win64, wow64]
         test: [m1ros2-vulkan]
@@ -66,6 +71,7 @@ jobs:
           arch -x86_64 $PWD/test-macos $PWD ${{ matrix.arch }} ${{ matrix.test }} ${{ inputs.event }}
 
       - name: Upload
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: test-macos-${{ matrix.test }}-${{ matrix.arch }}.report

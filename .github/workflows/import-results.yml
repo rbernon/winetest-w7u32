@@ -1,0 +1,50 @@
+name: import-results
+on:
+  workflow_dispatch:
+    inputs:
+      repository:
+        type: string
+        default: "winetest"
+      run_id:
+        type: string
+        default: "0"
+    secrets:
+      GH_TOKEN:
+        required: true
+  workflow_call:
+    inputs:
+      repository:
+        type: string
+        default: "winetest"
+      run_id:
+        type: string
+        default: "0"
+    secrets:
+      GH_TOKEN:
+        required: true
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download
+        uses: actions/download-artifact@v4
+        with:
+          pattern: "*.report"
+          github-token: ${{ github.token }}
+          repository: rbernon-winetests/${{ inputs.repository }}
+          run-id: ${{ inputs.run_id }}
+
+      - name: Execute
+        run: |
+          ls
+          $PWD/import-results *.report

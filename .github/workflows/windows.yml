@@ -36,8 +36,19 @@ jobs:
       archs: ${{ inputs.archs }}
       event: ${{ inputs.event }}
 
+  import-results:
+    needs: tests-windows
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
+    steps:
+      - name: Execute
+        run: |
+          gh workflow run import-results -R rbernon-winetests/winetest \
+            -f run_id=${{ github.run_id }} -f repository=${{ github.event.repository.name }}
+
   clean:
-    needs: [tests-windows]
+    needs: [import-results]
     runs-on: ubuntu-latest
     steps:
       - name: Cleanup

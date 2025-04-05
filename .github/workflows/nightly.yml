@@ -40,8 +40,16 @@ jobs:
       event: ${{ github.event_name }}
       run_id: ${{ github.run_id }}
 
-  clean:
+  import-results:
+    if: ${{ endsWith(github.repository, 'winetest') }}
     needs: [tests-linux, tests-macos, tests-windows]
+    uses: ./.github/workflows/import-results.yml
+    secrets: inherit
+    with:
+      run_id: ${{ github.run_id }}
+
+  clean:
+    needs: import-results
     runs-on: ubuntu-latest
     steps:
       - name: Cleanup
